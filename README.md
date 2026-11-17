@@ -25,7 +25,7 @@ O dashboard permite simular cenários e comparar seus impactos energéticos, amb
 
 ## 📄 Documentação
 
-Relatório técnico do projeto: **[Acessar relatório](LINK_DO_RELATORIO)**
+Relatório técnico: [Acessar relatório](https://github.com/thvdora/vao/blob/07ff1df377e2ace33a95fd292b93ef6af54d0b3a/Relat%C3%B3rio%20de%20desenvolvimento%20V%C3%83O.pdf)
 
 ---
 <div align="center">
