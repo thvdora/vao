@@ -35,5 +35,12 @@ Relatório técnico do projeto: **[Acessar relatório](LINK_DO_RELATORIO)**
 Protótipo de software com dados e parâmetros simulados. Não possui integração com sensores ou equipamentos físicos.
 
 ---
+<div align="center">
 
-**FIAP · Global Solution 2026**
+###
+
+**Isadora Soares Couto**  
+Ciência da Computação · FIAP · 2026
+
+</div>
+
