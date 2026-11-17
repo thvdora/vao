@@ -22,17 +22,10 @@ O dashboard permite simular cenários e comparar seus impactos energéticos, amb
 - Ajuste de tarifas, quantidade de passarelas e custos solares.
 - Análise de viabilidade financeira.
 
-## 🛠️ Tecnologias
-
-HTML · CSS · JavaScript · SVG · GitHub Pages
 
 ## 📄 Documentação
 
 Relatório técnico do projeto: **[Acessar relatório](LINK_DO_RELATORIO)**
-
-## ⚠️ Observação
-
-Protótipo de software com dados e parâmetros simulados. Não possui integração com sensores ou equipamentos físicos.
 
 ---
 <div align="center">
