@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VÃO — Painel de passarelas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#14110f;--ink:#ece4d3;--mut:#9b9284;--line:#3a342d;--sod:#f2a33a;--sol:#5fd1c4;--bad:#e5674f;--panel:#1c1814;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1ebdd;--ink:#1d1812;--mut:#6d6455;--line:#cfc4ae;--sod:#b86a00;--sol:#0b7f73;--bad:#b23a24;--panel:#e8e0cd;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f1ebdd;--ink:#1d1812;--mut:#6d6455;--line:#cfc4ae;--sod:#b86a00;--sol:#0b7f73;--bad:#b23a24;--panel:#e8e0cd;color-scheme:light}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 "JetBrains Mono",ui-monospace,Menlo,monospace}
+.w{max-width:1120px;margin:0 auto;padding:28px 20px 60px}
+h1{font:400 clamp(54px,11vw,120px)/.9 "Instrument Serif",Georgia,serif;margin:0;letter-spacing:-.02em}
+h1 em{color:var(--sod);font-style:normal}
+.tag{color:var(--mut);max-width:560px;margin:14px 0 0}
+.top{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:22px}
+.badge{font-size:11px;border:1px solid var(--line);padding:2px 8px;border-radius:99px;color:var(--mut)}
+.badge.s{color:var(--sod);border-color:var(--sod)}
+h2{font:400 26px "Instrument Serif",Georgia,serif;margin:0 0 4px}
+.sec{margin-top:34px}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.c4{grid-column:span 4}.c5{grid-column:span 5}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media(max-width:820px){.c4,.c5,.c7,.c8{grid-column:span 12}}
+.box{border:1px solid var(--line);background:var(--panel);padding:16px;border-radius:4px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button{font:inherit;color:var(--ink);background:none;border:1px solid var(--line);padding:8px 12px;cursor:pointer;border-radius:3px;text-align:left}
+button[aria-pressed=true]{border-color:var(--sod);color:var(--sod)}
+.k{font:400 54px/1 "Instrument Serif",Georgia,serif}.k small{font:12px "JetBrains Mono",monospace;color:var(--mut);margin-left:6px}
+.lab{color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+label{display:block;margin:10px 0 2px;font-size:12px;color:var(--mut)}input[type=range]{width:100%;accent-color:var(--sod)}
+svg{width:100%;height:auto;display:block}svg text{font-family:"JetBrains Mono",monospace;font-size:10.5px;fill:var(--mut)}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}th:first-child,td:first-child{text-align:left}th{color:var(--mut);font-weight:400}
+.verd{font:400 22px/1.25 "Instrument Serif",Georgia,serif}
+.note{font-size:11.5px;color:var(--mut)}
+pre.mermaid{background:var(--panel);padding:12px;border:1px solid var(--line);overflow-x:auto}
+</style>
+</head>
+<body><div class="w">
+<div class="top"><div>
+<div class="lab">Neighborhood Action Dashboard · módulo SERS · Diadema (SP) — cenário de estudo</div>
+<h1>V<em>Ã</em>O</h1>
+<p class="tag">Uma passarela acesa sem ninguém é um vão de energia. O painel mede quanto de luz a cidade gasta em vão — e quanto dá para devolver.</p></div>
+<div><span class="badge s">SIMULADO</span> <span class="badge">protótipo de software · sem integração física</span></div></div>
+
+<div class="tabs" id="tabs" role="group" aria-label="Cenário"></div>
+
+<div class="grid" id="kpis"></div>
+
+<div class="sec grid">
+<div class="box c8"><h2>Uma noite na passarela-tipo</h2><div class="note">Potência de iluminação (kW) por hora, 18h–05h. Perfil de presença <b>simulado</b>; premissas em dados/premissas.csv.</div><div id="prof"></div>
+<label for="hr">Hora da noite: <b id="hl"></b></label><input id="hr" type="range" min="0" max="11" value="3"></div>
+<div class="box c4"><h2>Simulador</h2>
+<label for="tar">Tarifa (R$/kWh): <b id="tv"></b> <span class="note">[hipótese]</span></label><input id="tar" type="range" min="0.5" max="1.5" step="0.05" value="0.75">
+<label for="nn">Passarelas na rede: <b id="nv"></b></label><input id="nn" type="range" min="1" max="10" value="10">
+<label for="wp">Custo do solar (R$/Wp): <b id="wv"></b> <span class="note">[hipótese]</span></label><input id="wp" type="range" min="2" max="6" step="0.25" value="4.5">
+<p class="note">Fator de emissão: 0,0385 kgCO₂/kWh (MCTI, SIN média 2023). Irradiação: 4,0 kWh/m²·dia, PR 0,75.</p></div>
+</div>
+
+<div class="sec"><h2>Corredor de passarelas</h2><div class="note">Cada nó é uma passarela com fluxo de pedestres próprio (simulado). Brilho = nível de luz na hora escolhida; barra = potência.</div><div class="box" style="margin-top:10px"><div id="map"></div></div></div>
+
+<div class="sec"><h2>Comparação dos cenários</h2><div class="box scroll"><table id="cmp"></table></div></div>
+
+<div class="sec grid">
+<div class="box c7"><h2>Degrau solar: vale a pena agora?</h2><div id="dec"></div></div>
+<div class="box c5"><h2>Origem dos dados</h2><p class="note"><span class="badge">FONTE</span> fator de emissão (MCTI), irradiação horizontal de São Paulo (CBENS), fórmula E = P×t/1000.<br><br><span class="badge s">HIPÓTESE</span> potências, quantidades, tarifa, custos unitários, vida útil.<br><br><span class="badge s">SIMULADO</span> perfil de presença e a variação entre passarelas.<br><br>Resultados são projeções condicionadas às premissas, não medições.</p></div></div>
+
+</div>
+
+<script>
+var PERF=[.85,.70,.55,.40,.25,.15,.08,.05,.04,.05,.12,.35],HRS=["18","19","20","21","22","23","00","01","02","03","04","05"];
+var M=[1.3,1.1,.9,1,1.4,.7,.8,1.2,.6,1],CAM=.576,CTRL=.12,HSP=4,PR=.75,KWP=1.65,FE=.0385;
+var NAMES={A:"A · Convencional (VSAP)",B:"B · LED fixo",C:"C · LED adaptativo",D:"D · C + solar on-grid"};
+var S={tar:.75,n:10,wp:4.5,sc:"C",h:3};
+function fr(f,m){return Math.min(1,f*m)}
+function heq(m){var a=0;PERF.forEach(function(f){f=fr(f,m);a+=f+.3*(1-f)});return a}
+function dayKwh(k,m){if(k=="A")return 20*85*12/1000+CAM;if(k=="B")return 20*20*12/1000+CAM;return 20*20*heq(m)/1000+CAM+CTRL}
+var MAN={A:1400,B:300,C:450,D:550};
+function capex(k){var c={A:0,B:20*450+1500,C:20*450+5500};c.D=c.C+KWP*1000*S.wp+1500;return c[k]}
+function fleet(k){var kwh=0,net=0,gen=KWP*HSP*PR*365;for(var i=0;i<S.n;i++){var l=dayKwh(k,M[i])*365;kwh+=l;net+=k=="D"?Math.max(0,l-gen):l}
+ var man=MAN[k]*S.n,opex=net*S.tar+man,cx=capex(k)*S.n;
+ var vp=function(y){var s=cx;for(var t=1;t<=y;t++)s+=opex/Math.pow(1.08,t);return s};
+ return{kwh:kwh,net:net,opex:opex,cx:cx,vp10:vp(10),vp25:vp(25),co2:net*FE,ren:kwh?(kwh-net)/kwh:0}}
+function f0(x){return Math.round(x).toLocaleString("pt-BR")}
+function rs(x){return"R$ "+f0(x)}
+function kp(l,v,u,n){return'<div class="box c4"><div class="lab">'+l+'</div><div class="k">'+v+'<small>'+u+'</small></div><div class="note">'+n+'</div></div>'}
+function render(){
+ var A=fleet("A"),F=fleet(S.sc);
+ document.getElementById("tv").textContent=S.tar.toFixed(2).replace(".",",");document.getElementById("nv").textContent=S.n;document.getElementById("wv").textContent=S.wp.toFixed(2).replace(".",",");
+ document.getElementById("hl").textContent=HRS[S.h]+"h";
+ document.getElementById("tabs").innerHTML=Object.keys(NAMES).map(function(k){return'<button aria-pressed="'+(k==S.sc)+'" data-k="'+k+'">'+NAMES[k]+'</button>'}).join("");
+ document.querySelectorAll("#tabs button").forEach(function(b){b.onclick=function(){S.sc=b.dataset.k;render()}});
+ var eco=(1-F.net/A.kwh)*100;
+ document.getElementById("kpis").innerHTML=
+  kp("I1 · Consumo da rede",f0(F.net/12),"kWh/mês","Rede de "+S.n+" passarelas; base A: "+f0(A.kwh/12)+" kWh/mês")+
+  kp("I2 · Economia energética",eco.toFixed(1).replace(".",","),"%","vs. cenário A, mesma necessidade")+
+  kp("I3 · Redução de custo",f0((A.opex-F.opex)/12),"R$/mês","energia + manutenção, vs. A")+
+  kp("I4 · Participação renovável",(F.ren*100).toFixed(0),"%","energia FV compensada ÷ consumo")+
+  kp("I5 · CO₂ evitado",(((A.kwh-F.net)*FE)).toFixed(0).replace(".",","),"kg/ano","matriz limpa: ganho climático pequeno")+
+  kp("I6 · Horas equivalentes a 100 %",heq(1).toFixed(1).replace(".",","),"h/noite","C e D; A e B operam 12 h");
+ profile();map();table();dec()}
+function profile(){var W=640,H=190,x0=40,y0=14,pw=580,ph=140,mx=1.9,out='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Potência de iluminação por hora">';
+ var X=function(i){return x0+pw*(i+.5)/12},Y=function(v){return y0+ph*(1-v/mx)};
+ [0,.5,1,1.5].forEach(function(g){out+='<line x1="'+x0+'" x2="'+(x0+pw)+'" y1="'+Y(g)+'" y2="'+Y(g)+'" stroke="var(--line)"/><text x="4" y="'+(Y(g)+4)+'">'+g+' kW</text>'});
+ var series={A:function(){return 1.7},B:function(){return .4},C:function(i){var f=PERF[i];return .4*(f+.3*(1-f))}};
+ var col={A:"var(--bad)",B:"var(--mut)",C:"var(--sod)"};
+ PERF.forEach(function(f,i){out+='<rect x="'+(X(i)-14)+'" y="'+(y0+ph+6)+'" width="28" height="'+(f*14)+'" fill="var(--sol)" opacity=".7"/>'});
+ for(var k in series){var d="";HRS.forEach(function(h,i){d+=(i?"L":"M")+X(i)+" "+Y(series[k](i))});out+='<path d="'+d+'" fill="none" stroke="'+col[k]+'" stroke-width="2"/><text x="'+(x0+pw-60)+'" y="'+(Y(series[k](11))-6)+'" style="fill:'+col[k]+'">'+k+'</text>'}
+ out+='<line x1="'+X(S.h)+'" x2="'+X(S.h)+'" y1="'+y0+'" y2="'+(y0+ph)+'" stroke="var(--ink)" stroke-dasharray="3 3"/>';
+ HRS.forEach(function(h,i){out+='<text x="'+(X(i)-7)+'" y="'+(H-2)+'">'+h+'h</text>'});
+ document.getElementById("prof").innerHTML=out+'</svg><div class="note">Barras ciano: fração da hora com presença (simulada). D tem o mesmo consumo de C; a geração FV o compensa ao longo do ano.</div>'}
+function map(){var n=S.n,W=1000,out='<svg viewBox="0 0 '+W+' 150" role="img" aria-label="Corredor de passarelas"><line x1="30" x2="970" y1="50" y2="50" stroke="var(--line)" stroke-width="2" stroke-dasharray="2 6"/>';
+ for(var i=0;i<n;i++){var x=60+i*(880/Math.max(1,n-1)),f=fr(PERF[S.h],M[i]),adapt=S.sc=="C"||S.sc=="D",lvl=adapt?f+.3*(1-f):1,kw=S.sc=="A"?1.7:.4*lvl;
+  out+='<circle cx="'+x+'" cy="50" r="22" fill="var(--sod)" opacity="'+(.15+.85*lvl)+'"/><circle cx="'+x+'" cy="50" r="22" fill="none" stroke="var(--sod)"/>';
+  if(S.sc=="D")out+='<circle cx="'+x+'" cy="50" r="30" fill="none" stroke="var(--sol)" stroke-dasharray="3 3"/>';
+  out+='<text x="'+(x-8)+'" y="54" style="fill:var(--bg);font-weight:600">'+(i+1)+'</text><rect x="'+(x-14)+'" y="'+(130-kw/1.7*60)+'" width="28" height="'+(kw/1.7*60)+'" fill="var(--sod)"/><text x="'+(x-14)+'" y="'+(144)+'">'+Math.round(kw*1000)+' W</text>'}
+ document.getElementById("map").innerHTML='<div class="scroll"><div style="min-width:640px">'+out+'</svg></div></div>'}
+function table(){var rows=["A","B","C","D"].map(function(k){return[k,fleet(k)]}),A=rows[0][1];
+ var h='<tr><th>Cenário</th><th>kWh/ano (rede)</th><th>Custo anual</th><th>Investimento</th><th>Custo total 10 a (VP)</th><th>Custo total 25 a (VP)</th><th>CO₂ kg/ano</th></tr>';
+ rows.forEach(function(r){var v=r[1];h+='<tr'+(r[0]==S.sc?' style="color:var(--sod)"':'')+'><td>'+NAMES[r[0]]+'</td><td>'+f0(v.net)+'</td><td>'+rs(v.opex)+'</td><td>'+rs(v.cx)+'</td><td>'+rs(v.vp10)+'</td><td>'+rs(v.vp25)+'</td><td>'+f0(v.co2)+'</td></tr>'});
+ document.getElementById("cmp").innerHTML=h}
+function dec(){var C=fleet("C"),D=fleet("D"),dc=D.cx-C.cx,de=C.opex-D.opex,pb=de>0?dc/de:Infinity,fa=function(y){var s=0;for(var t=1;t<=y;t++)s+=1/Math.pow(1.08,t);return s};
+ var load=C.kwh,eq25=((dc/fa(25))/S.n+(MAN.D-MAN.C))/ (load/S.n),eq10=((dc/fa(10))/S.n+(MAN.D-MAN.C))/(load/S.n);
+ var ok=D.vp25<=C.vp25;
+ document.getElementById("dec").innerHTML='<div class="verd">'+(ok?"O degrau solar já se paga em 25 anos com estas premissas.":"Com estas premissas, o solar ainda não vence a eficiência pura em 25 anos.")+'</div><p>Investimento extra do solar: <b>'+rs(dc)+'</b> · economia extra: <b>'+rs(de)+'/ano</b> · retorno simples: <b>'+(isFinite(pb)?pb.toFixed(1).replace(".",",")+" anos":"—")+'</b>.</p><p class="note">Tarifa de equilíbrio (VP, taxa 8 % a.a.): <b>R$ '+eq10.toFixed(2).replace(".",",")+'/kWh</b> em 10 anos; <b>R$ '+eq25.toFixed(2).replace(".",",")+'/kWh</b> em 25 anos (vida útil usual de módulos). Ordem de implantação sugerida: C primeiro; D quando a tarifa ou o custo do solar cruzarem o limiar.</p>'}
+document.getElementById("hr").oninput=function(e){S.h=+e.target.value;render()};
+document.getElementById("tar").oninput=function(e){S.tar=+e.target.value;render()};
+document.getElementById("nn").oninput=function(e){S.n=+e.target.value;render()};
+document.getElementById("wp").oninput=function(e){S.wp=+e.target.value;render()};
+render();
+</script>
+
+<!--claude-mermaid-runtime-begin:3477-->
+<style>.mermaid-diagram{margin-block:4px}.mermaid-diagram svg{display:block;margin:0 auto;max-width:100%;height:auto}</style>
+<script src="/_runtime/mermaid-11.16.1.min.js"></script>
+<script>(function(){
+var CFG={"palettes":{"light":{"surface":"#f4efe4","text":"#42392e","line":"#8a7f6d","border":"#7a6c52","bg":"#fffdf8"},"dark":{"surface":"#262b34","text":"#f2f3f5","line":"#a8adb8","border":"#9aa4b8","bg":"#1f232b"}}};
+if(typeof mermaid==='undefined')return;
+var pres=Array.prototype.slice.call(document.querySelectorAll('pre.mermaid')).filter(function(p){if(p.hasAttribute('data-claude-mermaid-claimed'))return false;p.setAttribute('data-claude-mermaid-claimed','1');return true;});
+if(!pres.length)return;
+var mq=window.matchMedia?window.matchMedia('(prefers-color-scheme: dark)'):null;
+var root=document.documentElement;
+var items=pres.map(function(pre){
+var mount=document.createElement('div');mount.className='mermaid-diagram';
+return {pre:pre,mount:mount,src:pre.textContent||''};
+});
+var seq=0;
+var renderGen=0;
+var lastKey='';
+function pageBg(fallback){
+var els=[document.body,document.documentElement];
+for(var i=0;i<els.length;i++){
+var c=els[i]&&getComputedStyle(els[i]).backgroundColor;
+if(c&&c!=='transparent'&&c!=='rgba(0, 0, 0, 0)')return c;
+}
+return fallback;
+}
+function render(){
+var theme=root.getAttribute('data-theme');
+var dark=theme==='dark'||(!!(mq&&mq.matches)&&theme!=='light');
+var pal=dark?CFG.palettes.dark:CFG.palettes.light;
+var bg=pageBg(pal.bg);
+var key=(dark?'d':'l')+'|'+bg;
+if(key===lastKey)return;
+lastKey=key;
+var gen=++renderGen;
+var font=getComputedStyle(document.body).fontFamily||'sans-serif';
+var nat={useMaxWidth:false};
+mermaid.initialize({
+startOnLoad:false,securityLevel:'strict',theme:'base',
+flowchart:nat,sequence:nat,er:nat,state:nat,class:nat,pie:nat,
+gantt:nat,journey:nat,timeline:nat,gitGraph:nat,mindmap:nat,xyChart:nat,
+quadrantChart:nat,sankey:nat,c4:nat,requirement:nat,block:nat,
+packet:nat,kanban:nat,architecture:nat,radar:nat,
+themeVariables:{background:bg,mainBkg:pal.surface,primaryColor:pal.surface,
+primaryTextColor:pal.text,lineColor:pal.line,primaryBorderColor:pal.border,
+nodeBorder:pal.border,clusterBorder:pal.border,edgeLabelBackground:bg,
+clusterBkg:'rgba(127,127,127,0.07)',titleColor:pal.text,
+darkMode:dark,rowOdd:bg,rowEven:'rgba(127,127,127,0.07)',
+attributeBackgroundColorOdd:bg,attributeBackgroundColorEven:'rgba(127,127,127,0.07)',
+fontSize:'16px',fontFamily:font},
+themeCSS:'.node rect, .node circle, .node polygon, .node path, .cluster rect { stroke-width: 2px; }'
+});
+items.forEach(function(it){
+var id='claude-mermaid-'+seq++;
+mermaid.render(id,it.src).then(function(r){
+if(gen!==renderGen)return;
+var prev=it.pre.previousElementSibling;
+if(prev&&prev.className==='mermaid-diagram'&&prev!==it.mount)return;
+it.mount.innerHTML=r.svg;
+if(!it.mount.parentNode)it.pre.parentNode.insertBefore(it.mount,it.pre);
+it.pre.style.display='none';
+},function(){
+var scratch=document.getElementById(id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+scratch=document.getElementById('d'+id);
+if(scratch)scratch.parentNode.removeChild(scratch);
+if(gen!==renderGen)return;
+if(it.mount.parentNode)it.mount.parentNode.removeChild(it.mount);
+it.pre.style.display='';
+});
+});
+}
+render();
+if(mq&&mq.addEventListener)mq.addEventListener('change',render);
+if(typeof MutationObserver!=='undefined')new MutationObserver(render).observe(root,{attributes:true,attributeFilter:['data-theme']});
+})();</script>
+<!--claude-mermaid-runtime-end-->
+</body></html>
