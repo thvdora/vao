@@ -15,7 +15,7 @@ O VÃO propõe uma alternativa para reduzir o desperdício energético na ilumin
 O dashboard permite simular cenários e comparar seus impactos energéticos, ambientais e financeiros.
 
 ## 🎥 Assista ao vídeo de apresentação
-**[→ Visualizar apresentação](https://vao-gs-2026.lovable.app/)**
+**[→ Assistir](https://vao-gs-2026.lovable.app/)**
 
 ## ⚙️ Funcionalidades
 
